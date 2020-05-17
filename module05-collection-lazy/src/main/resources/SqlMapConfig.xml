@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+    <settings>
+        <!--开启Mybatis支持延迟加载-->
+        <setting name="lazyLoadingEnabled" value="true"/>
+        <setting name="aggressiveLazyLoading" value="false"></setting>
+    </settings>
+
+    <typeAliases> <!--配置别名-->
+        <package name="com.marvin.domain"/><!--该包下的实体类都会注册别名,小配置文件里就不用写全类名了-->
+    </typeAliases>
+
+    <environments default="mysql">
+        <environment id="mysql">
+            <transactionManager type="JDBC"></transactionManager>
+            <dataSource type="POOLED">
+                <property name="driver" value="com.mysql.jdbc.Driver"/>
+                <property name="url" value="jdbc:mysql://localhost:3306/learn_mybatis"/>
+                <property name="username" value="root"/>
+                <property name="password" value="root"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+    <mappers><!--小配置文件和接口映射-->
+<!--   <mapper resource="com/marvin/dao/UserDao.xml"/>-->
+<!--   <mapper class="com.marvin.dao.UserDao"/> 在dao层接口方法上加@Select注解直接写sql：1删除UserDao.xml2这里改为class-->
+        <package name="com.marvin.dao"/><!-- package标签是用于指定dao接口所在的包,当指定了之后就不需要在写mapper以及resource或者class了 -->
+    </mappers>
+
+</configuration>

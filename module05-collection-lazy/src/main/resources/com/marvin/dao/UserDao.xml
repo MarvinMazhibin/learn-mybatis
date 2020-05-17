@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.marvin.dao.UserDao">
+
+    <resultMap id="userMap" type="User"><!--实体类属性、数据库列名对应关系。因为大配置文件里声明了mappers-package，所以可以直接写user-->
+        <id property="userId" column="id"></id><!--主键-->
+        <result property="userName" column="username"></result>
+        <result property="userBirthday" column="birthday"></result>
+        <result property="userSex" column="sex"></result>
+        <result property="userAddress" column="address"></result>
+        <collection property="accounts" ofType="Account" column="id"
+                    select="com.marvin.dao.AccountDao.findAccById"></collection>
+    </resultMap>
+
+    <select id="findUserAll" resultMap="userMap">
+        select * from user
+    </select>
+
+</mapper>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.marvin.dao.AccountDao">
+    
+    <resultMap id="accountMap" type="Account">
+        <id property="id" column="account_id"/><!--property 是属性 get后的字母-->
+        <result property="uid" column="uid"/>
+        <result property="money" column="money"/>
+        <association property="user" javaType="User">
+            <id property="userId" column="id" />
+            <result property="userName" column="username" />
+            <result property="userBirthday" column="birthday" />
+            <result property="userSex" column="sex" />
+            <result property="userAddress" column="address" />
+        </association>
+    </resultMap>
+
+    <select id="findAll" resultMap="accountMap">
+        SELECT user.*,
+             account.id as account_id,
+             account.uid,
+             account.money
+      FROM account
+      inner join user
+      on account.uid = user.id
+    </select>
+</mapper>

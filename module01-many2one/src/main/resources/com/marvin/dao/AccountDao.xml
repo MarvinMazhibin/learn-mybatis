@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.marvin.dao.AccountDao">
+
+    <resultMap id="map01" type="AccountUser"><!--因为属性和数据库列名不一样 所以对应一下-->
+        <result property="userName" column="username"/>
+        <result property="userAddress" column="address"/>
+    </resultMap>
+
+    <select id="findAll" resultMap="map01">
+        SELECT account.*,
+             user.username,
+             user.address
+      FROM account
+      inner join user
+      on account.uid = user.id
+    </select>
+</mapper>

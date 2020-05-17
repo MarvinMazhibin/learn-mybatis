@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.marvin.dao.UserDao">
+    <resultMap id="userMap" type="User"><!--实体类属性、数据库列名对应关系。因为大配置文件里声明了mappers-package，所以可以直接写user-->
+        <id property="userId" column="id"></id><!--主键-->
+        <result property="userName" column="username"></result>
+        <result property="userBirthday" column="birthday"></result>
+        <result property="userSex" column="sex"></result>
+        <result property="userAddress" column="address"></result>
+    </resultMap>
+
+
+    <select id="findAll" resultMap="userMap">
+        select * from user
+    </select>
+
+    <select id="findById" resultMap="userMap" parameterType="Integer"><!--#{userId}这里只有一个参数可以随意写-->
+        select * from user where id = #{userId}
+    </select>
+
+    <insert id="saveUser"  parameterType="User"><!--#{userBirthday} userBirthday是user的get的属性。原理是ognl表达式user.userBirthday。 -->
+        <selectKey keyProperty="userId" keyColumn="id" resultType="int" order="AFTER"><!--返回user可以有ID，AFTER是先插入再查询id的意思-->
+            select last_insert_id()
+        </selectKey>
+        insert into user (username,birthday,sex,address) values (#{userName},#{userBirthday},#{userSex},#{userAddress})
+    </insert>
+
+    <update id="updateUser" parameterType="User">
+        update user set username = #{userName},birthday = #{userBirthday},sex = #{userSex},address = #{userAddress}
+        where id = #{userId}
+    </update>
+
+    <delete id="deleteUser" parameterType="Integer">
+        delete from user where id = #{userId}
+    </delete>
+
+    <select id="findByName" resultMap="userMap" parameterType="String">
+        select * from user  where  username like #{userName}
+    </select>
+
+    <select id="findTotal" resultType="int">
+        select count(*) from user
+    </select>
+
+    <select id="findByCondition" resultMap="userMap" parameterType="User">
+        select * from user
+        <where>
+            <if test="userName != null">and username = #{userName}</if><!--第一个条件的and 可加可不加-->
+            <if test="userSex != null">and sex = #{userSex}</if> <!--test里面的是属性，是userSex而不是sex-->
+        </where>
+    </select>
+
+    <select id="findInIds" resultMap="userMap" parameterType="QueryVo"><!--#{User.userName} User是Queryvo的get的属性-->
+        select * from user
+        <where>
+            <if test="ids != null and ids.size() > 0"><!--这里是java代码,不能写 is not null-->
+                <foreach collection="ids" open="id in (" close=")" separator="," item="uid">#{uid}</foreach>
+            </if>
+        </where>
+    </select>
+
+
+</mapper>
